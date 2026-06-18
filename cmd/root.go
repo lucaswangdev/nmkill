@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "dev" // 默认版本，构建时通过 ldflags 注入
+
 var rootCmd = &cobra.Command{
 	Use:   "nmkill",
 	Short: "nmkill - 清理 node_modules 的 CLI 工具",
@@ -18,7 +20,7 @@ var rootCmd = &cobra.Command{
   nmkill query [path]    扫描目录下的 node_modules
   nmkill execute [csv]   根据 CSV 文件删除 node_modules
   nmkill help            显示帮助信息`,
-	Version: "0.1.0",
+	Version: version,
 }
 
 func Execute() error {

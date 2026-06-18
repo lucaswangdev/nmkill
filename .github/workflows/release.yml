@@ -20,10 +20,6 @@ jobs:
         goarch:
           - amd64
           - arm64
-        include:
-          - goos: windows
-            goarch: amd64
-            extension: .exe
 
     steps:
       - name: Checkout code
@@ -37,6 +33,10 @@ jobs:
       - name: Get dependencies
         run: go mod download
 
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
       - name: Build
         env:
           GOOS: ${{ matrix.goos }}
@@ -48,7 +48,8 @@ jobs:
             extension=".exe"
           fi
           filename="nmkill-${{ matrix.goos }}-${{ matrix.goarch }}${extension}"
-          go build -ldflags="-s -w" -o "${filename}" .
+          # 使用 ldflags 注入版本号
+          go build -ldflags="-s -w -X github.com/lucaswangdev/nmkill/cmd.version=${{ steps.version.outputs.VERSION }}" -o "${filename}" .
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
