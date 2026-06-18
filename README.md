@@ -12,28 +12,34 @@
 
 ## Installation
 
-### macOS / Linux
+### Option 1: Download Pre-built Binary (Recommended)
+
+Download the latest release from [GitHub Releases](https://github.com/lucaswangdev/nmkill/releases/latest):
+
+| Platform | Command |
+|----------|---------|
+| **Linux amd64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-amd64 -o nmkill && chmod +x nmkill` |
+| **Linux arm64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-arm64 -o nmkill && chmod +x nmkill` |
+| **macOS amd64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-amd64 -o nmkill && chmod +x nmkill` |
+| **macOS arm64 (Apple Silicon)** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-arm64 -o nmkill && chmod +x nmkill` |
+| **Windows** | `Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-windows-amd64.exe" -OutFile "nmkill.exe"` |
+
+### Option 2: Install via Go
 
 ```bash
-# Using Go
+# All platforms
 go install github.com/lucaswangdev/nmkill@latest
-
-# Or download from GitHub Releases
-curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-amd64 -o nmkill
-chmod +x nmkill
 ```
 
-### Windows
+### Option 3: Build from Source
 
-```powershell
-# Using Go
-go install github.com/lucaswangdev/nmkill@latest
-
-# Or download from GitHub Releases
-# Download nmkill-windows-amd64.exe from the releases page
+```bash
+git clone https://github.com/lucaswangdev/nmkill.git
+cd nmkill
+go install
 ```
 
-## Usage
+## Quick Start
 
 ### 1. Scan for node_modules
 
@@ -90,12 +96,16 @@ All CSV files are stored in `~/.nmkill/` with timestamps:
 └── node_modules_20250618_151000.csv
 ```
 
-## Options
+## Usage
+
+### Commands
 
 | Command | Description |
 |---------|-------------|
 | `nmkill query [path]` | Scan for node_modules (default: current directory) |
 | `nmkill execute [csv]` | Delete marked node_modules (uses latest CSV if not specified) |
+
+### Flags
 
 | Flag | Description |
 |------|-------------|
