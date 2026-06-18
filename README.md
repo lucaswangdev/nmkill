@@ -14,6 +14,20 @@
 
 ## Installation
 
+### Uninstall Old Version (if exists)
+
+**Linux / macOS:**
+```bash
+sudo rm /usr/local/bin/nmkill
+```
+
+**Windows:**
+```powershell
+Remove-Item C:\Windows\System32\nmkill.exe
+```
+
+---
+
 ### 🪟 Windows
 
 **PowerShell (Run as Administrator):**
@@ -65,14 +79,6 @@ curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-l
 ```bash
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
 curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
-```
-
----
-
-### 📦 Alternative: Install via Go
-
-```bash
-go install github.com/lucaswangdev/nmkill@latest
 ```
 
 ---
