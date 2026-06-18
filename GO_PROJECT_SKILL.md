@@ -379,3 +379,135 @@ rm -f myapp            # 删除二进制
 3. **每完成一个功能**就 commit，不要最后一次性提交
 4. **README 在第一个版本发布前**完成
 5. **使用语义化版本号** vMAJOR.MINOR.PATCH
+
+---
+
+## ⚠️ 经验教训: 版本号管理
+
+### ❌ 错误做法: 硬编码版本号
+
+```go
+// cmd/root.go
+var rootCmd = &cobra.Command{
+    Version: "0.1.0",  // ❌ 硬编码！每次发布都要手动改
+}
+```
+
+**问题**:
+- 发布新版本时忘记改这里
+- GitHub Actions 构建时版本号不变
+- 用户下载的是新版本，但显示的是旧版本号
+
+### ✅ 正确做法: ldflags 注入版本号
+
+**1. cmd/root.go** - 定义变量，不赋值
+```go
+var version = "dev" // 构建时注入
+```
+
+**2. release.yml** - 构建时注入
+```yaml
+- name: Extract version from tag
+  id: version
+  run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+- name: Build
+  env:
+    GOOS: ${{ matrix.goos }}
+    GOARCH: ${{ matrix.goarch }}
+    CGO_ENABLED: 0
+  run: |
+    ext=""
+    [ "${{ matrix.goos }}" = "windows" ] && ext=".exe"
+    filename="myapp-${{ matrix.goos }}-${{ matrix.goarch }}${ext}"
+    # 关键：-X flag 注入版本号
+    go build -ldflags="-s -w -X myproject/cmd.version=${{ steps.version.outputs.VERSION }}" -o "${filename}" .
+```
+
+**3. 本地测试**
+```bash
+go build -ldflags="-X myproject/cmd.version=0.1.0" -o myapp .
+./myapp --version  # 输出: myapp version 0.1.0
+```
+
+### 🔑 关键点
+
+| 项目 | 说明 |
+|------|------|
+| `-X` flag | Go 编译时注入变量值 |
+| 格式 | `-X package.path.variable=value` |
+| 示例 | `-X github.com/user/myproject/cmd.version=0.1.0` |
+| 变量类型 | 只能注入 string 类型变量 |
+
+### 发布流程检查清单
+
+- [ ] `cmd/root.go` 中 version 变量默认值为 "dev"
+- [ ] `release.yml` 使用 ldflags 注入版本号
+- [ ] 打 tag 前本地测试: `go build -ldflags="-X..."`
+- [ ] 验证: 下载 release 二进制，运行 `--version`
+- [ ] README 更新为新版本号
+
+### GitHub Actions 完整模板
+
+```yaml
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin, windows]
+        goarch: [amd64, arm64]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Extract version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          ext=""
+          [ "${{ matrix.goos }}" = "windows" ] && ext=".exe"
+          filename="myapp-${{ matrix.goos }}-${{ matrix.goarch }}${ext}"
+          go build -ldflags="-s -w -X myproject/cmd.version=${{ steps.version.outputs.VERSION }}" -o "${filename}" .
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: myapp-*
+```
+
+---
+
+## 🔧 调试技巧
+
+### 本地验证版本号注入
+```bash
+# 测试不同版本
+go build -ldflags="-X myproject/cmd.version=1.0.0" -o myapp .
+./myapp --version
+
+# 验证注入成功
+strings myapp | grep "version"
+```
+
+### 检查 release.yml 是否正确执行
+```bash
+# 查看 Actions 日志中的 version 输出
+# 确认: VERSION=0.1.2
+```
