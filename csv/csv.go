@@ -11,7 +11,7 @@ import (
 
 const (
 	HeaderPath   = "path"
-	HeaderSize   = "size"
+	HeaderSize   = "size(MB)"
 	HeaderDelete = "delete"
 	DeleteYes    = "yes"
 	DeleteNo     = "no"
@@ -23,6 +23,12 @@ type Record struct {
 	Path   string
 	Size   int64
 	Delete string
+}
+
+// sizeToMB 字节转换为MB，保留2位小数
+func sizeToMB(size int64) string {
+	mb := float64(size) / (1024 * 1024)
+	return strconv.FormatFloat(mb, 'f', 2, 64)
 }
 
 // WriteCSV 写入 CSV 文件
@@ -51,7 +57,7 @@ func WriteCSV(path string, modules []scanner.NodeModule) error {
 
 		if err := writer.Write([]string{
 			m.Path,
-			strconv.FormatInt(m.Size, 10),
+			sizeToMB(m.Size),
 			deleteMark,
 		}); err != nil {
 			return err
@@ -85,7 +91,13 @@ func ReadCSV(path string) ([]Record, error) {
 			continue
 		}
 
-		size, _ := strconv.ParseInt(record[1], 10, 64)
+		// 解析 MB 字符串为字节
+		sizeMB, err := strconv.ParseFloat(record[1], 64)
+		if err != nil {
+			continue
+		}
+		size := int64(sizeMB * 1024 * 1024)
+
 		result = append(result, Record{
 			Path:   record[0],
 			Size:   size,

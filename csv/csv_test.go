@@ -33,9 +33,9 @@ func TestWriteCSV(t *testing.T) {
 	
 	content := string(data)
 	
-	// 验证表头包含 path,size,delete
-	if !strings.Contains(content, "path") || !strings.Contains(content, "size") || !strings.Contains(content, "delete") {
-		t.Error("CSV header incorrect")
+	// 验证表头包含 size(MB)
+	if !strings.Contains(content, "size(MB)") {
+		t.Error("CSV header should contain size(MB)")
 	}
 	
 	// 验证内容包含 yes/no
@@ -45,16 +45,24 @@ func TestWriteCSV(t *testing.T) {
 	if !strings.Contains(content, "no") {
 		t.Error("Expected 'no' in CSV")
 	}
+	
+	// 验证 MB 值正确
+	if !strings.Contains(content, "600.00") {
+		t.Error("Expected '600.00' MB in CSV")
+	}
+	if !strings.Contains(content, "400.00") {
+		t.Error("Expected '400.00' MB in CSV")
+	}
 }
 
 func TestReadCSV(t *testing.T) {
 	tmpDir := t.TempDir()
 	csvPath := filepath.Join(tmpDir, "test.csv")
 	
-	// 写入测试 CSV
-	content := `path,size,delete
-/path/to/nm1,524288000,yes
-/path/to/nm2,104857600,no
+	// 写入测试 CSV (MB格式)
+	content := `path,size(MB),delete
+/path/to/nm1,500.00,yes
+/path/to/nm2,100.00,no
 `
 	err := os.WriteFile(csvPath, []byte(content), 0644)
 	if err != nil {
@@ -73,6 +81,7 @@ func TestReadCSV(t *testing.T) {
 	if records[0].Path != "/path/to/nm1" {
 		t.Errorf("Expected /path/to/nm1, got %s", records[0].Path)
 	}
+	// 500 MB = 524288000 bytes
 	if records[0].Size != 524288000 {
 		t.Errorf("Expected 524288000, got %d", records[0].Size)
 	}
