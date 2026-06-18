@@ -14,32 +14,65 @@
 
 ## Installation
 
-### Option 1: Go Install (Recommended)
+### 🪟 Windows
 
-```bash
-go install github.com/lucaswangdev/nmkill@latest
+**PowerShell (Run as Administrator):**
+
+```powershell
+# Check latest version at: https://github.com/lucaswangdev/nmkill/releases
+Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
 ```
-
-> Requires [Go](https://go.dev/dl/) installed. Auto-updates to latest version.
 
 ---
 
-### Option 2: Download Binary
+### 🍎 macOS (Intel)
 
-Download the latest release from [GitHub Releases](https://github.com/lucaswangdev/nmkill/releases):
-
-| Platform | Download |
-|----------|----------|
-| Linux amd64 | [nmkill-linux-amd64](https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-amd64) |
-| Linux arm64 | [nmkill-linux-arm64](https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-arm64) |
-| macOS Intel | [nmkill-darwin-amd64](https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-amd64) |
-| macOS Apple Silicon | [nmkill-darwin-arm64](https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-arm64) |
-| Windows | [nmkill-windows-amd64.exe](https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-windows-amd64.exe) |
-
-After download, run:
+**Terminal:**
 
 ```bash
-chmod +x nmkill-* && sudo mv nmkill-* /usr/local/bin/nmkill
+# Check latest version at: https://github.com/lucaswangdev/nmkill/releases
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-darwin-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+```
+
+---
+
+### 🍎 macOS (Apple Silicon / M1/M2/M3)
+
+**Terminal:**
+
+```bash
+# Check latest version at: https://github.com/lucaswangdev/nmkill/releases
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-darwin-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+```
+
+---
+
+### 🐧 Linux (amd64)
+
+**Terminal:**
+
+```bash
+# Check latest version at: https://github.com/lucaswangdev/nmkill/releases
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+```
+
+---
+
+### 🐧 Linux (arm64)
+
+**Terminal:**
+
+```bash
+# Check latest version at: https://github.com/lucaswangdev/nmkill/releases
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.1/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+```
+
+---
+
+### 📦 Alternative: Install via Go
+
+```bash
+go install github.com/lucaswangdev/nmkill@latest
 ```
 
 ---
