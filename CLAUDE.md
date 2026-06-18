@@ -142,3 +142,44 @@ All data stored locally, no external services.
 ### Permission denied
 - Use `sudo` on macOS/Linux for `/usr/local/bin`
 - Run PowerShell as Administrator on Windows
+
+---
+
+## ⚠️ 经验教训: 版本号管理
+
+### ❌ 错误做法: 硬编码版本号
+
+```go
+// cmd/root.go
+var rootCmd = &cobra.Command{
+    Version: "0.1.0",  // ❌ 硬编码！
+}
+```
+
+**问题**: 发布新版本时忘记改这里，GitHub Actions 构建时版本号不变
+
+### ✅ 正确做法: ldflags 注入版本号
+
+**cmd/root.go**:
+```go
+var version = "dev" // 构建时注入
+```
+
+**release.yml**:
+```yaml
+- name: Extract version from tag
+  id: version
+  run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+- name: Build
+  run: |
+    go build -ldflags="-s -w -X github.com/lucaswangdev/nmkill/cmd.version=${{ steps.version.outputs.VERSION }}" -o "${filename}" .
+```
+
+### 发布检查清单
+
+- [ ] cmd/root.go 中 version 默认值为 "dev"
+- [ ] release.yml 使用 ldflags 注入版本号
+- [ ] 打 tag 前本地测试版本号
+- [ ] 下载 release 二进制，验证 `--version`
+- [ ] README 更新为新版本号
