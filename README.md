@@ -12,24 +12,31 @@
 
 ## Installation
 
-### Option 1: Download Pre-built Binary (Recommended)
+### Option 1: One-line Install (Recommended)
 
-Download the latest release from [GitHub Releases](https://github.com/lucaswangdev/nmkill/releases/latest):
-
-| Platform | Command |
-|----------|---------|
-| **Linux amd64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-amd64 -o nmkill && chmod +x nmkill` |
-| **Linux arm64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-linux-arm64 -o nmkill && chmod +x nmkill` |
-| **macOS amd64** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-amd64 -o nmkill && chmod +x nmkill` |
-| **macOS arm64 (Apple Silicon)** | `curl -L https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-darwin-arm64 -o nmkill && chmod +x nmkill` |
-| **Windows** | `Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/latest/download/nmkill-windows-amd64.exe" -OutFile "nmkill.exe"` |
-
-### Option 2: Install via Go
+#### Linux / macOS (Terminal)
 
 ```bash
-# All platforms
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+```
+
+> 如果是 **macOS Intel**，把 `nmkill-linux-amd64` 换成 `nmkill-darwin-amd64`
+> 如果是 **macOS Apple Silicon**，把 `nmkill-linux-amd64` 换成 `nmkill-darwin-arm64`
+
+#### Windows (PowerShell)
+
+```powershell
+# 以管理员身份运行 PowerShell
+Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
+```
+
+### Option 2: Install via Go (Cross-platform)
+
+```bash
 go install github.com/lucaswangdev/nmkill@latest
 ```
+
+> 需要提前安装 [Go](https://go.dev/dl/)
 
 ### Option 3: Build from Source
 
@@ -37,6 +44,13 @@ go install github.com/lucaswangdev/nmkill@latest
 git clone https://github.com/lucaswangdev/nmkill.git
 cd nmkill
 go install
+```
+
+### Verify Installation
+
+```bash
+nmkill --version
+# 输出: nmkill version 0.1.0
 ```
 
 ## Quick Start
