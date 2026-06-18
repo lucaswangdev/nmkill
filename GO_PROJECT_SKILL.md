@@ -301,13 +301,13 @@ git push origin v0.1.0
 ### 安装命令格式
 ```bash
 # Linux
-curl -L https://github.com/user/repo/releases/download/v0.1.0/myapp-linux-amd64 -o /tmp/myapp && chmod +x /tmp/myapp && sudo mv /tmp/myapp /usr/local/bin/myapp
+curl -L https://github.com/user/repo/releases/download/latest/myapp-linux-amd64 -o /tmp/myapp && chmod +x /tmp/myapp && sudo mv /tmp/myapp /usr/local/bin/myapp
 
 # macOS
-curl -L https://github.com/user/repo/releases/download/v0.1.0/myapp-darwin-amd64 -o /tmp/myapp && chmod +x /tmp/myapp && sudo mv /tmp/myapp /usr/local/bin/myapp
+curl -L https://github.com/user/repo/releases/download/latest/myapp-darwin-amd64 -o /tmp/myapp && chmod +x /tmp/myapp && sudo mv /tmp/myapp /usr/local/bin/myapp
 
 # Windows (PowerShell)
-Invoke-WebRequest -Uri "https://github.com/user/repo/releases/download/v0.1.0/myapp-windows-amd64.exe" -OutFile "C:\Windows\System32\myapp.exe"
+Invoke-WebRequest -Uri "https://github.com/user/repo/releases/download/latest/myapp-windows-amd64.exe" -OutFile "C:\Windows\System32\myapp.exe"
 ```
 
 ---

@@ -19,7 +19,7 @@
 **PowerShell (Run as Administrator):**
 
 ```powershell
-Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
+Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/latest/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
 ```
 
 **验证:**
@@ -34,7 +34,7 @@ nmkill --version
 **Terminal:**
 
 ```bash
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-darwin-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/latest/nmkill-darwin-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 **验证:**
@@ -49,7 +49,7 @@ nmkill --version
 **Terminal:**
 
 ```bash
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-darwin-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/latest/nmkill-darwin-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 **验证:**
@@ -64,7 +64,7 @@ nmkill --version
 **Terminal:**
 
 ```bash
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/latest/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 **验证:**
@@ -79,7 +79,7 @@ nmkill --version
 **Terminal:**
 
 ```bash
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.0/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/latest/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 **验证:**
