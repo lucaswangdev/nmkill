@@ -34,7 +34,7 @@ Remove-Item C:\Windows\System32\nmkill.exe
 
 ```powershell
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
-Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
+Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download/v0.1.3/nmkill-windows-amd64.exe" -OutFile "C:\Windows\System32\nmkill.exe"
 ```
 
 ---
@@ -45,7 +45,7 @@ Invoke-WebRequest -Uri "https://github.com/lucaswangdev/nmkill/releases/download
 
 ```bash
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-darwin-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.3/nmkill-darwin-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 ---
@@ -56,7 +56,7 @@ curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-d
 
 ```bash
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-darwin-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.3/nmkill-darwin-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 ---
@@ -67,7 +67,7 @@ curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-d
 
 ```bash
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.3/nmkill-linux-amd64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 ---
@@ -78,7 +78,7 @@ curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-l
 
 ```bash
 # Check latest version at: https://github.com/lucaswangdev/nmkill/releases
-curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.2/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
+curl -L https://github.com/lucaswangdev/nmkill/releases/download/v0.1.3/nmkill-linux-arm64 -o /tmp/nmkill && chmod +x /tmp/nmkill && sudo mv /tmp/nmkill /usr/local/bin/nmkill
 ```
 
 ---

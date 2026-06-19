@@ -15,7 +15,8 @@ type NodeModule struct {
 
 // Scanner 目录扫描器
 type Scanner struct {
-	results []NodeModule
+	results     []NodeModule
+	dirsVisited int64
 }
 
 // New 创建新的扫描器
@@ -25,11 +26,23 @@ func New() *Scanner {
 	}
 }
 
+// ProgressCallback 进度回调函数类型
+type ProgressCallback func(dirsVisited int64)
+
 // Scan 从指定根目录开始扫描 node_modules
-func (s *Scanner) Scan(root string) ([]NodeModule, error) {
+// progressCallback 可选回调，每隔一段时间报告已扫描的目录数
+func (s *Scanner) Scan(root string, progressCallback ...ProgressCallback) ([]NodeModule, error) {
 	results := make([]NodeModule, 0)
+	s.dirsVisited = 0
 
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		s.dirsVisited++
+
+		// 每1000个目录触发一次回调
+		if len(progressCallback) > 0 && s.dirsVisited%1000 == 0 {
+			progressCallback[0](s.dirsVisited)
+		}
+
 		if err != nil {
 			return nil // 跳过无法访问的目录
 		}
@@ -57,6 +70,11 @@ func (s *Scanner) Scan(root string) ([]NodeModule, error) {
 
 		return nil
 	})
+
+	// 最终回调
+	if len(progressCallback) > 0 && s.dirsVisited > 0 {
+		progressCallback[0](s.dirsVisited)
+	}
 
 	return results, err
 }

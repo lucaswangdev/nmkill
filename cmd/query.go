@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/lucaswangdev/nmkill/config"
 	"github.com/lucaswangdev/nmkill/csv"
@@ -30,7 +32,44 @@ var queryCmd = &cobra.Command{
 		fmt.Printf("正在扫描: %s\n", absRoot)
 
 		s := scanner.New()
-		results, err := s.Scan(absRoot)
+		progressChan := make(chan int64)
+		var totalDirs int64
+
+		// 启动进度显示 goroutine
+		go func() {
+			spinners := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+			var lastCount int64
+			for {
+				select {
+				case count, ok := <-progressChan:
+					if !ok {
+						return
+					}
+					lastCount = count
+					idx := (int(count / 1000)) % len(spinners)
+					fmt.Printf("\r%s 已扫描 %d 个目录", spinners[idx], count)
+				case <-time.After(100 * time.Millisecond):
+					if lastCount > 0 {
+						fmt.Printf("\r已扫描 %d 个目录", lastCount)
+					}
+				}
+			}
+		}()
+
+		results, err := s.Scan(absRoot, func(dirsVisited int64) {
+			totalDirs = dirsVisited
+			select {
+			case progressChan <- dirsVisited:
+			default:
+			}
+		})
+
+		close(progressChan)
+
+		// 清除进度行并输出结果
+		fmt.Printf("\r%s\r", strings.Repeat(" ", 60))
+		fmt.Printf("共扫描 %d 个目录\n", totalDirs)
+
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "错误: 扫描失败: %v\n", err)
 			os.Exit(1)
