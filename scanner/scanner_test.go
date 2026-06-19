@@ -6,6 +6,30 @@ import (
 	"testing"
 )
 
+func BenchmarkScan(b *testing.B) {
+	// 创建大量测试目录模拟真实场景
+	tmpDir := b.TempDir()
+
+	// 创建多个项目目录
+	for i := 0; i < 50; i++ {
+		projectDir := filepath.Join(tmpDir, "project"+string(rune('A'+i)))
+		os.MkdirAll(filepath.Join(projectDir, "node_modules", "pkg1"), 0755)
+		os.MkdirAll(filepath.Join(projectDir, "node_modules", "pkg2"), 0755)
+		os.MkdirAll(filepath.Join(projectDir, "src"), 0755)
+		os.WriteFile(filepath.Join(projectDir, "package.json"), []byte(`{"name":"test"}`), 0644)
+
+		// 添加一些文件到 node_modules
+		os.WriteFile(filepath.Join(projectDir, "node_modules", "pkg1", "index.js"), []byte(`console.log("test")`), 0644)
+		os.WriteFile(filepath.Join(projectDir, "node_modules", "pkg2", "index.js"), []byte(`console.log("test")`), 0644)
+	}
+
+	s := New()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		s.Scan(tmpDir)
+	}
+}
+
 func TestScanner_Scan(t *testing.T) {
 	// 创建临时测试目录结构
 	tmpDir := t.TempDir()

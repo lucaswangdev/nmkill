@@ -3,6 +3,7 @@ package scanner
 import (
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
@@ -17,6 +18,7 @@ type NodeModule struct {
 type Scanner struct {
 	results     []NodeModule
 	dirsVisited int64
+	mu          sync.Mutex
 }
 
 // New 创建新的扫描器
@@ -32,51 +34,101 @@ type ProgressCallback func(dirsVisited int64)
 // Scan 从指定根目录开始扫描 node_modules
 // progressCallback 可选回调，每隔一段时间报告已扫描的目录数
 func (s *Scanner) Scan(root string, progressCallback ...ProgressCallback) ([]NodeModule, error) {
-	results := make([]NodeModule, 0)
+	s.results = make([]NodeModule, 0)
 	s.dirsVisited = 0
 
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		s.dirsVisited++
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		return nil, err
+	}
 
-		// 每1000个目录触发一次回调
-		if len(progressCallback) > 0 && s.dirsVisited%1000 == 0 {
-			progressCallback[0](s.dirsVisited)
+	var wg sync.WaitGroup
+	var entryErr error
+
+	// 并行扫描每个子目录
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
 		}
 
-		if err != nil {
-			return nil // 跳过无法访问的目录
+		// 检查是否是 node_modules
+		if entry.Name() == "node_modules" {
+			path := filepath.Join(root, entry.Name())
+			wg.Add(1)
+			s.scanNodeModules(path, &wg, progressCallback)
+			continue
 		}
 
-		// 如果是目录且名称为 node_modules
-		if info.IsDir() && info.Name() == "node_modules" {
-			// 计算目录大小
-			size, err := s.calculateDirSize(path)
-			if err != nil {
-				return nil
-			}
+		path := filepath.Join(root, entry.Name())
+		wg.Add(1)
+		go func(p string) {
+			defer wg.Done()
+			s.walkDir(p, progressCallback)
+		}(path)
+	}
 
-			// 获取最后修改时间
-			lastMod := info.ModTime()
-
-			results = append(results, NodeModule{
-				Path:    path,
-				Size:    size,
-				LastMod: lastMod,
-			})
-
-			// 跳过 node_modules 内部遍历
-			return filepath.SkipDir
-		}
-
-		return nil
-	})
+	wg.Wait()
 
 	// 最终回调
 	if len(progressCallback) > 0 && s.dirsVisited > 0 {
 		progressCallback[0](s.dirsVisited)
 	}
 
-	return results, err
+	return s.results, entryErr
+}
+
+// walkDir 遍历目录查找 node_modules
+func (s *Scanner) walkDir(root string, progressCallback []ProgressCallback) {
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		return
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+
+		s.mu.Lock()
+		s.dirsVisited++
+		dirsVisited := s.dirsVisited
+		s.mu.Unlock()
+
+		if len(progressCallback) > 0 && dirsVisited%1000 == 0 {
+			progressCallback[0](dirsVisited)
+		}
+
+		if entry.Name() == "node_modules" {
+			path := filepath.Join(root, entry.Name())
+			s.scanNodeModules(path, nil, progressCallback)
+			continue
+		}
+
+		path := filepath.Join(root, entry.Name())
+		s.walkDir(path, progressCallback)
+	}
+}
+
+// scanNodeModules 扫描单个 node_modules 并添加到结果
+func (s *Scanner) scanNodeModules(path string, wg *sync.WaitGroup, progressCallback []ProgressCallback) {
+	if wg != nil {
+		defer wg.Done()
+	}
+
+	info, err := os.Stat(path)
+	if err != nil {
+		return
+	}
+
+	size, _ := s.calculateDirSize(path)
+
+	s.mu.Lock()
+	s.results = append(s.results, NodeModule{
+		Path:    path,
+		Size:    size,
+		LastMod: info.ModTime(),
+	})
+	s.mu.Unlock()
 }
 
 // calculateDirSize 计算目录大小
